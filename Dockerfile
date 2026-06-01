@@ -3,12 +3,11 @@ FROM maven:3.9-eclipse-temurin-17 AS builder
 
 WORKDIR /app
 
-# Copy pom.xml and download dependencies
-COPY helpboard-backend/pom.xml .
-RUN mvn dependency:go-offline
+# Copy the backend subdirectory
+COPY helpboard-backend/ .
 
-# Copy source code
-COPY helpboard-backend/src ./src
+# Download dependencies
+RUN mvn dependency:go-offline
 
 # Build the application
 RUN mvn clean package -DskipTests
