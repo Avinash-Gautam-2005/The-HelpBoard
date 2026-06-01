@@ -6,9 +6,6 @@ WORKDIR /app
 # Copy the backend subdirectory
 COPY helpboard-backend/ .
 
-# Download dependencies
-RUN mvn dependency:go-offline
-
 # Build the application
 RUN mvn clean package -DskipTests
 
