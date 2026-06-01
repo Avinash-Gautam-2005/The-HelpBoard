@@ -8,28 +8,20 @@ services:
     plan: free
     envVars:
       - key: SPRING_DATASOURCE_URL
-        scope: all
         value: ${DATABASE_URL}
       - key: SPRING_DATASOURCE_USERNAME
-        scope: all
         value: ${DATABASE_USERNAME}
       - key: SPRING_DATASOURCE_PASSWORD
-        scope: all
         value: ${DATABASE_PASSWORD}
       - key: JWT_SECRET
-        scope: all
         value: ${JWT_SECRET}
       - key: JWT_EXPIRATIONMS
-        scope: all
         value: 3600000
       - key: SPRING_JPA_HIBERNATE_DDL_AUTO
-        scope: all
         value: update
       - key: SERVER_PORT
-        scope: all
         value: 8080
       - key: SPRING_CORS_ALLOWED_ORIGINS
-        scope: all
         value: ${FRONTEND_URL}
 
   # Frontend service
@@ -42,11 +34,7 @@ services:
     startCommand: cd helpboard-frontend && npm start
     envVars:
       - key: NEXT_PUBLIC_API_BASE_URL
-        scope: all
         value: ${BACKEND_URL}
-    routes:
-      - path: /
-        destination: /
 
 # Database service
 databases:
