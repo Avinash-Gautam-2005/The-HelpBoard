@@ -18,14 +18,16 @@ const nextConfig = {
 
   // ✅ Add rewrites for backend proxy
   async rewrites() {
+    const backendUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080"
+    
     return [
       {
         source: "/ws/:path*", // Proxy WebSocket/SockJS requests
-        destination: "http://localhost:8080/ws/:path*",
+        destination: `${backendUrl}/ws/:path*`,
       },
       {
         source: "/api/:path*", // Proxy REST API requests if needed
-        destination: "http://localhost:8080/api/:path*",
+        destination: `${backendUrl}/api/:path*`,
       },
     ];
   },

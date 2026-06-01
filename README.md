@@ -23,8 +23,7 @@ A full-stack web application that enables neighbors to share, borrow, lend, and 
 - **Status Updates**: Approve, reject, or track request status
 - **Real-time Notifications**: Stay updated on request changes
 
-## Demo Video
-<h2>https://drive.google.com/file/d/1-kyJP42EOv-zJytk9kKG8yXo8wlFdw4R/view?usp=drive_link</h2>
+
 
 ## 🏗️ Tech Stack
 
@@ -254,16 +253,63 @@ npm start
 
 ## 🚀 Deployment
 
+### Push to GitHub
+```bash
+# Navigate to project root
+cd HelpBoard
+
+# Add GitHub remote (if not already done)
+git remote add origin https://github.com/YOUR_USERNAME/helpboard.git
+git branch -M main
+
+# Push to GitHub
+git push -u origin main
+```
+
 ### Backend Deployment
 1. Build the JAR file: `mvn clean package`
-2. Deploy to your preferred Java hosting platform
-3. Configure environment variables for database and JWT secret
-4. Set up MySQL database
+2. Deploy to your preferred Java hosting platform (Azure, AWS, Heroku, etc.)
+3. Configure environment variables:
+   - `SPRING_DATASOURCE_URL`: Database connection string
+   - `SPRING_DATASOURCE_USERNAME`: Database username
+   - `SPRING_DATASOURCE_PASSWORD`: Database password
+   - `JWT_SECRET`: JWT signing key
+4. Set up MySQL database on your hosting platform
+5. Update frontend `NEXT_PUBLIC_API_BASE_URL` to point to your deployed backend
 
-### Frontend Deployment
-1. Build the application: `npm run build`
-2. Deploy to Vercel, Netlify, or your preferred hosting platform
-3. Configure environment variables for API endpoints
+### Frontend Deployment on Vercel
+
+#### Option 1: Using GitHub (Recommended)
+1. Push your code to GitHub (see above)
+2. Go to [vercel.com](https://vercel.com) and sign in with GitHub
+3. Click **Add New** → **Project**
+4. Select your `helpboard` repository
+5. **Framework Preset**: Next.js (should auto-detect)
+6. **Root Directory**: `helpboard-frontend`
+7. **Environment Variables**: Add
+   - `NEXT_PUBLIC_API_BASE_URL`: Your deployed backend URL (e.g., `https://your-backend.azurewebsites.net`)
+8. Click **Deploy**
+
+#### Option 2: Using Vercel CLI
+```bash
+# Install Vercel CLI
+npm install -g vercel
+
+# Navigate to frontend directory
+cd helpboard-frontend
+
+# Deploy
+vercel --prod
+```
+
+#### Environment Variables for Production
+In Vercel dashboard → Settings → Environment Variables:
+- **Key**: `NEXT_PUBLIC_API_BASE_URL`
+- **Value**: `https://your-backend-url.com` (your deployed Java backend URL)
+
+**Example:**
+- Development: `http://localhost:8080`
+- Production: `https://helpboard-api.azurewebsites.net`
 
 ## 🤝 Contributing
 
