@@ -8,19 +8,37 @@ services:
     plan: free
     envVars:
       - key: SPRING_DATASOURCE_URL
-        value: ${DATABASE_URL}
+        fromDatabase:
+          name: helpboard-db
+          property: connectionString
       - key: SPRING_DATASOURCE_USERNAME
-        value: ${DATABASE_USERNAME}
+        fromDatabase:
+          name: helpboard-db
+          property: user
       - key: SPRING_DATASOURCE_PASSWORD
-        value: ${DATABASE_PASSWORD}
+        fromDatabase:
+          name: helpboard-db
+          property: password
+      - key: DATABASE_HOST
+        fromDatabase:
+          name: helpboard-db
+          property: host
+      - key: DATABASE_PORT
+        fromDatabase:
+          name: helpboard-db
+          property: port
+      - key: DATABASE_NAME
+        fromDatabase:
+          name: helpboard-db
+          property: database
       - key: JWT_SECRET
         value: ${JWT_SECRET}
       - key: JWT_EXPIRATIONMS
-        value: 3600000
+        value: "3600000"
       - key: SPRING_JPA_HIBERNATE_DDL_AUTO
         value: update
       - key: SERVER_PORT
-        value: 8080
+        value: "8080"
       - key: SPRING_CORS_ALLOWED_ORIGINS
         value: ${FRONTEND_URL}
 
@@ -36,9 +54,9 @@ services:
       - key: NEXT_PUBLIC_API_BASE_URL
         value: ${BACKEND_URL}
 
-# Database service
+# PostgreSQL Database (Render free tier supports PostgreSQL, NOT MySQL)
 databases:
-  - name: helpboard-mysql
+  - name: helpboard-db
     databaseName: helpboarddb
     user: helpboard_user
     plan: free
