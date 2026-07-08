@@ -27,6 +27,8 @@ export default function ChatPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    let activeClient: any = null
+
     const initChat = async () => {
       try {
         const reqResponse = await api.get(`/requests/${requestId}`)
@@ -36,6 +38,7 @@ export default function ChatPage() {
 
         if (token) {
           const client = createStompClient(token)
+          activeClient = client
 
           client.onConnect = () => {
             console.log("[v0] STOMP connected")
@@ -87,8 +90,8 @@ export default function ChatPage() {
     initChat()
 
     return () => {
-      if (stompClient) {
-        stompClient.deactivate()
+      if (activeClient) {
+        activeClient.deactivate()
         setIsConnected(false)
       }
       clearMessages()
