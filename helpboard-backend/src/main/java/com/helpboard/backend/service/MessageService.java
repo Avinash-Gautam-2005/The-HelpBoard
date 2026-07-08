@@ -57,10 +57,7 @@ public class MessageService {
         User sender = userRepository.findById(senderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Sender user not found with ID: " + senderId));
 
-        // Only allow chat for APPROVED requests
-        if (request.getStatus() != RequestStatus.APPROVED) {
-            throw new AccessDeniedException("Chat is only available for APPROVED requests.");
-        }
+
 
         // Ensure the sender is a participant of the request
         if (!request.getRequester().getUserId().equals(senderId) &&

@@ -80,7 +80,7 @@ export default function ItemDetailPage() {
     )
   }
 
-  const isOwner = user?.id === item.ownerId
+  const isOwner = user?.userId === item.ownerId
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

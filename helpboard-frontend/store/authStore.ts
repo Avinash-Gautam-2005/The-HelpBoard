@@ -3,7 +3,7 @@ import { api } from "../lib/api"
 import toast from "react-hot-toast"
 
 interface User {
-  id: number
+  userId: number
   name: string
   email: string
   location: string

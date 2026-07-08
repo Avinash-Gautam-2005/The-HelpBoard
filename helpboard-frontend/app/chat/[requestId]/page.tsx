@@ -34,7 +34,7 @@ export default function ChatPage() {
 
         await loadMessages(requestId)
 
-        if (token && reqResponse.data.status === "APPROVED") {
+        if (token) {
           const client = createStompClient(token)
 
           client.onConnect = () => {
@@ -147,33 +147,10 @@ export default function ChatPage() {
         <div className="card h-[calc(100vh-12rem)] flex flex-col">
           <div className="border-b pb-4 mb-4">
             <h1 className="text-2xl font-bold text-gray-900">Chat - Request #{requestId}</h1>
-            <p className="text-sm text-gray-500">
-              {requestDetail?.status === "APPROVED"
-                ? (isConnected ? "🟢 Connected" : "🔴 Disconnected")
-                : `🔒 Chat Locked (Request is ${requestDetail?.status || 'PENDING'})`
-              }
-            </p>
+            <p className="text-sm text-gray-500">{isConnected ? "🟢 Connected" : "🔴 Disconnected"}</p>
           </div>
 
           <div className="flex-1 overflow-y-auto mb-4 space-y-2">
-            {requestDetail && requestDetail.status !== "APPROVED" && (
-              <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
-                <div className="flex">
-                  <div className="flex-shrink-0">
-                    <span className="text-yellow-700">⚠️</span>
-                  </div>
-                  <div className="ml-3">
-                    <p className="text-sm text-yellow-700">
-                      {requestDetail.status === "PENDING"
-                        ? "This request is pending approval. Chat will become available once the item owner approves the request."
-                        : requestDetail.status === "REJECTED"
-                        ? "This request has been rejected. Chat is disabled."
-                        : `This request is ${requestDetail.status}. Chat is disabled.`}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
             {messages.length === 0 ? (
               <p className="text-center text-gray-500 py-8">No messages yet. Start the conversation!</p>
             ) : (
@@ -183,7 +160,7 @@ export default function ChatPage() {
                   content={message.content}
                   senderName={message.senderName}
                   timestamp={message.timestamp}
-                  isOwnMessage={message.senderId === user?.id}
+                  isOwnMessage={message.senderId === user?.userId}
                 />
               ))
             )}
@@ -198,11 +175,11 @@ export default function ChatPage() {
               onKeyPress={handleKeyPress}
               placeholder="Type your message..."
               className="input-field flex-1"
-              disabled={!isConnected || requestDetail?.status !== "APPROVED"}
+              disabled={!isConnected}
             />
             <button
               onClick={handleSendMessage}
-              disabled={!messageInput.trim() || !stompClient?.connected || requestDetail?.status !== "APPROVED"}
+              disabled={!messageInput.trim() || !stompClient?.connected}
               className="btn-primary px-6"
             >
               Send
