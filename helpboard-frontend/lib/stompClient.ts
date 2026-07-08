@@ -2,9 +2,9 @@ import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
 export function createStompClient(token: string) {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080";
   const client = new Client({
-    // ✅ Use relative path, not full URL
-    webSocketFactory: () => new SockJS("http://localhost:8080/ws"),
+    webSocketFactory: () => new SockJS(`${API_BASE_URL}/ws`),
     connectHeaders: {
       Authorization: token?.startsWith("Bearer ")
         ? token
@@ -15,6 +15,8 @@ export function createStompClient(token: string) {
     heartbeatIncoming: 4000,
     heartbeatOutgoing: 4000,
   });
-  window.stompClient = client;
+  if (typeof window !== "undefined") {
+    window.stompClient = client;
+  }
   return client;
 }
