@@ -7,30 +7,16 @@ services:
     region: oregon
     plan: free
     envVars:
-      - key: SPRING_DATASOURCE_URL
-        fromDatabase:
-          name: helpboard-db
-          property: connectionString
-      - key: SPRING_DATASOURCE_USERNAME
-        fromDatabase:
-          name: helpboard-db
-          property: user
-      - key: SPRING_DATASOURCE_PASSWORD
-        fromDatabase:
-          name: helpboard-db
-          property: password
       - key: DATABASE_HOST
-        fromDatabase:
-          name: helpboard-db
-          property: host
+        sync: false
       - key: DATABASE_PORT
-        fromDatabase:
-          name: helpboard-db
-          property: port
+        value: "5432"
       - key: DATABASE_NAME
-        fromDatabase:
-          name: helpboard-db
-          property: database
+        sync: false
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
       - key: JWT_SECRET
         value: ${JWT_SECRET}
       - key: JWT_EXPIRATIONMS
@@ -53,11 +39,3 @@ services:
     envVars:
       - key: NEXT_PUBLIC_API_BASE_URL
         value: ${BACKEND_URL}
-
-# PostgreSQL Database (Render free tier supports PostgreSQL, NOT MySQL)
-databases:
-  - name: helpboard-db
-    databaseName: helpboarddb
-    user: helpboard_user
-    plan: free
-    region: oregon
