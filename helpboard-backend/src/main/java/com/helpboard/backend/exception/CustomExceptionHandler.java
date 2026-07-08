@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -18,6 +21,8 @@ import java.util.Objects;
  */
 @ControllerAdvice
 public class CustomExceptionHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(CustomExceptionHandler.class);
 
     /**
      * Handles ResourceNotFoundException.
@@ -109,6 +114,7 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGlobalException(Exception ex, WebRequest request) {
+        logger.error("An unexpected error occurred: ", ex);
         ErrorResponse errorResponse = new ErrorResponse(
                 LocalDateTime.now(),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),

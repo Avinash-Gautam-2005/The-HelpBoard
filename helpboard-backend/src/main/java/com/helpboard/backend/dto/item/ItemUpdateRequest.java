@@ -20,7 +20,7 @@ public class ItemUpdateRequest {
 
     private ItemType type;
 
-    @Size(max = 500, message = "Image URL cannot exceed 500 characters")
+    @Size(max = 2048, message = "Image URL cannot exceed 2048 characters")
     private String imageUrl;
 
     private ItemStatus status;

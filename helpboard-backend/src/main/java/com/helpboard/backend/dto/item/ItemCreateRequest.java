@@ -25,6 +25,6 @@ public class ItemCreateRequest {
     @NotNull(message = "Item type is required")
     private ItemType type;
 
-    @Size(max = 500, message = "Image URL cannot exceed 500 characters")
+    @Size(max = 2048, message = "Image URL cannot exceed 2048 characters")
     private String imageUrl;
 }

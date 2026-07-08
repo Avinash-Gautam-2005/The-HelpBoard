@@ -37,6 +37,7 @@ public class Item {
     @Column(nullable = false)
     private ItemType type;
 
+    @Column(length = 2048)
     private String imageUrl; // Optional
 
     @Enumerated(EnumType.STRING)
