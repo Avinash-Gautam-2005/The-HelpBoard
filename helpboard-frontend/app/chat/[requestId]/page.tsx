@@ -10,6 +10,7 @@ import ProtectedRoute from "../../../components/ProtectedRoute"
 import ChatBubble from "../../../components/ChatBubble"
 import Loader from "../../../components/Loader"
 import { createStompClient } from "../../../lib/stompClient"
+import { api } from "../../../lib/api"
 import type { Client } from "@stomp/stompjs"
 import toast from "react-hot-toast"
 
@@ -22,14 +23,18 @@ export default function ChatPage() {
   const [messageInput, setMessageInput] = useState("")
   const [stompClient, setStompClient] = useState<Client | null>(null)
   const [isConnected, setIsConnected] = useState(false)
+  const [requestDetail, setRequestDetail] = useState<any>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const initChat = async () => {
       try {
+        const reqResponse = await api.get(`/requests/${requestId}`)
+        setRequestDetail(reqResponse.data)
+
         await loadMessages(requestId)
 
-        if (token) {
+        if (token && reqResponse.data.status === "APPROVED") {
           const client = createStompClient(token)
 
           client.onConnect = () => {
@@ -142,10 +147,33 @@ export default function ChatPage() {
         <div className="card h-[calc(100vh-12rem)] flex flex-col">
           <div className="border-b pb-4 mb-4">
             <h1 className="text-2xl font-bold text-gray-900">Chat - Request #{requestId}</h1>
-            <p className="text-sm text-gray-500">{isConnected ? "🟢 Connected" : "🔴 Disconnected"}</p>
+            <p className="text-sm text-gray-500">
+              {requestDetail?.status === "APPROVED"
+                ? (isConnected ? "🟢 Connected" : "🔴 Disconnected")
+                : `🔒 Chat Locked (Request is ${requestDetail?.status || 'PENDING'})`
+              }
+            </p>
           </div>
 
           <div className="flex-1 overflow-y-auto mb-4 space-y-2">
+            {requestDetail && requestDetail.status !== "APPROVED" && (
+              <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <span className="text-yellow-700">⚠️</span>
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-sm text-yellow-700">
+                      {requestDetail.status === "PENDING"
+                        ? "This request is pending approval. Chat will become available once the item owner approves the request."
+                        : requestDetail.status === "REJECTED"
+                        ? "This request has been rejected. Chat is disabled."
+                        : `This request is ${requestDetail.status}. Chat is disabled.`}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
             {messages.length === 0 ? (
               <p className="text-center text-gray-500 py-8">No messages yet. Start the conversation!</p>
             ) : (
@@ -170,11 +198,11 @@ export default function ChatPage() {
               onKeyPress={handleKeyPress}
               placeholder="Type your message..."
               className="input-field flex-1"
-              disabled={!isConnected}
+              disabled={!isConnected || requestDetail?.status !== "APPROVED"}
             />
             <button
               onClick={handleSendMessage}
-              disabled={!messageInput.trim() || !stompClient?.connected}
+              disabled={!messageInput.trim() || !stompClient?.connected || requestDetail?.status !== "APPROVED"}
               className="btn-primary px-6"
             >
               Send
